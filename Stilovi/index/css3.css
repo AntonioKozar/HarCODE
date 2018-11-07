@@ -1,0 +1,26 @@
+/*body { padding-top: 60px; padding-bottom: 40px; }*/
+input.required, select.required, textarea.required { background-color: #FFC; }
+p.justified { text-align: justify; }
+.searchBox { margin: 15% auto; padding: 10%; width: 50%; border: solid 1px #27AD30; }
+    .searchBox input { text-align: center; }
+
+#h2harcode{ color:#08c;font-family:Xolonium; font-weight: 400; -webkit-font-smoothing: antialiased; }
+.loginDiv { margin: 0 auto; width: 280px; }
+/*.centered { margin: 0 auto; }*/
+.rounded { -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; }
+.centered { margin: 50px auto; float: none; padding: 2%; }
+.bordered { border: solid 1px #27AD30; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; }
+legend 
+{ 
+    border-bottom: 1px solid #08c;
+
+}
+.row { margin: 0px; }
+.nomargin { margin: 0; }
+.serviceLabel { margin: 3px; padding: 8px; }
+.loadingDiv { width: 125px; margin: 0 auto 0 auto; }
+.gallery { margin: 5px; }
+    .gallery img { border: 1px solid #08c; margin: 1px auto; }
+.social { }
+    .social img { width: 40px; margin:2px; float:right; }
+.caption p{word-break:break-all; text-align: center;}

@@ -1,0 +1,46 @@
+/*body { padding-top: 60px; padding-bottom: 40px; }*/
+input.required, select.required, textarea.required { background-color: #FFC; }
+p.justified { text-align: justify; }
+.checkboxOnThumbnail { position: absolute; margin-top: -70px; margin-left: 4px; }
+.gallerySelectionThumb { margin: 4px; }
+.map { height: 400px; }
+    .map img { max-width: none; }
+#map img { max-width: none; }
+.roundedBorder { border: 1px solid #ddd; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; }
+.thumbnailMarginFix { margin-left: 0; margin-top: 5px; }
+.serviceLabel { margin: 3px; padding: 8px; }
+.gridButtons { width: 160px; vertical-align: middle; }
+.calendar-table { font-size: 0.8em; }
+    .calendar-table th, .calendar-table td { padding: 3px; }
+    .calendar-table thead th, .calendar-table tbody th, .calendar-table tbody td { text-align: center; }
+        .calendar-table tbody th.cw { border-bottom: none; }
+        .calendar-table tbody td.cw { background-color: #e8e8e8; border-bottom: none; color: #666666; font-size: 7.5pt; font-weight: normal; text-align: center; text-shadow: 0 1px 0 #ffffff; text-transform: uppercase; }
+        .calendar-table tbody td.free { background-color: #007700; color: #fff; }
+        .calendar-table tbody td.booked { background-color: #c43c35; color: #fff; }
+        .calendar-table tbody td.checkOut { color: #fff; background: #c43c35; /* Old browsers */ background: -moz-linear-gradient(-45deg, #007700 50%, #c43c35 50%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, right bottom, color-stop(50%, #007700), color-stop(50%,#c43c35)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(-45deg,#007700 50%, #c43c35 50%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(-45deg, #007700 50%,#c43c35 50%); /* Opera 11.10+ */ background: -ms-linear-gradient(-45deg, #007700 50%, #c43c35 50%); /* IE10+ */ background: linear-gradient(135deg,#007700 50%,#c43c35 50%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007700', endColorstr='#c43c35',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */ }
+        .calendar-table tbody td.checkIn { color: #fff; background: #c43c35; /* Old browsers */ background: -moz-linear-gradient(-45deg, #c43c35 50%, #007700 50%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, right bottom, color-stop(50%,#c43c35), color-stop(50%,#007700)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(-45deg, #c43c35 50%,#007700 50%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(-45deg, #c43c35 50%,#007700 50%); /* Opera 11.10+ */ background: -ms-linear-gradient(-45deg, #c43c35 50%,#007700 50%); /* IE10+ */ background: linear-gradient(135deg, #c43c35 50%,#007700 50%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c43c35', endColorstr='#007700',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */ }
+
+#galleryDialog, #mediaDialog { position: fixed; top: 0; right: 0; bottom: 100%; left: 0; margin: 0; width: 100%; height: 100%; }
+.uploadResult { overflow-y: auto; max-height: 400px; }
+#galleryDialog > div.modal-body, #mediaDialog > div.modal-body { max-height: 100%; overflow-x: hidden; }
+#galleryDialog.modal.fade.in, #mediaDialog.modal.fade.in { top: 0; }
+#loadingDialog.modal.fade.in { top: 35%; }
+#loadingDialogBody { text-align: center; }
+.searchBox { margin: auto; height: 350px; }
+td.name > span { -o-text-overflow: ellipsis; /* Opera */ text-overflow: ellipsis; /* IE, Safari (WebKit) */ overflow: hidden; /* don't show excess chars */ white-space: nowrap; /* force single line */ width: 150px; display: block; }
+.centered { margin: 50px auto; float: none; padding: 2%; }
+.centeredText { text-align: center; float:left; }
+.adminDiv { border: solid 1px #27AD30; -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; }
+.galleryItem { margin: 5px; border: 1px solid #CCC; padding: 3px; background: #f7f7f7; }
+    .galleryItem > .caption { margin: 5px; }
+#mediaDetailsDialog { width: 250px; }
+.rounded { -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; }
+.adminMenu { float: none; margin: 10% auto; padding: 5%; border: solid 1px #27AD30; }
+    .adminMenu .thumbnails { margin: 5px; }
+    .adminMenu .thumbnail { background: #fff; }
+    .adminMenu .caption { text-align: center; }
+.trim { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+legend { border-bottom: 1px solid #27ad30; }
+.nomargin{margin:0;}
+#h2harcode, .brand { color: Green; font-family: 'Titillium Web', sans-serif; font-weight: 400; -webkit-font-smoothing: antialiased; }
+#mediaContainer, #galleryContainer{padding:8px;}

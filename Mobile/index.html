@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>HarCODE</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link type="text/css" rel="stylesheet" href="css4.css" />
+    <script type="text/javascript" src="m.js"></script>
+    <script src="glfx.js"></script>
+    <script src="fabric.js"></script>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="logo"><a href="index.html">HarCODE</a></div>
+            <div class="options">
+            </div>
+            <div class="clear"></div>
+        </header>
+    </div>
+    <article>
+        <h2 class="underline">Pretraživanje proizvoda</h2>
+        <form method="get" class="label-top">
+            <div class="span6 centered adminDiv">
+
+                <div class="control-group">
+                    <label class="control-label" for="inputHarcode">Harcode ili barcode</label>
+                    <div class="controls">
+                        <div class="input-append">
+                            <input style="height: 30px;" id="txtCode" name="kod" value="" placeholder="Harcode ili barcode" maxlength="13" required type="text" autocomplete="off" tabindex="1"><br>
+                            <div id="info"></div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="button" name="trazi" id="saveButton" value="Pretraživanje" onclick="trazi_m(txtCode.value)"><br>
+
+                        <br>
+
+                        <input type="button" name="ocr" id="btn" value="Pretraži po slici" onclick="open_picker()" /><br />
+                        <!--<input type="file" id="picker" onchange="picked_file(this.files[0])" style="display:none">-->
+                        <input id="picker" type="file" accept="image/*" capture="camera" onchange="picked_file(this.files[0])" style="display: none">
+                        <br>
+                        <canvas id="c" style="display: none"></canvas>
+                        <br />
+
+                        <a style="padding: 0px; padding-top: 2px;" href="../index.php?nop=1" class="btn">Vrati na normalnu verziju</a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </article>
+
+    <footer>
+
+        <p>HarCODE</p>
+        <p id="info_pult"></p>
+    </footer>
+    <script>
+        var razina = 10;
+        var c = document.getElementById('c'),
+            o = c.getContext('2d');
+
+        function reset_canvas() {
+            o.fillStyle = 'white'
+            o.fillRect(0, 0, c.width, c.height)
+            o.fillStyle = 'black'
+        }
+
+        function open_picker() {
+            var e = document.createEvent("MouseEvents");
+            e.initEvent('click', true, true);
+            document.getElementById('picker').dispatchEvent(e);
+        }
+        var subFile;
+        function picked_file(file) {
+            if (!file) return;
+
+            subFile = file;
+
+            var ext = file.name.split('.').slice(-1)[0];
+            var reader = new FileReader();
+
+            //if (file.type == "image/x-portable-bitmap" || ext == 'pbm' || ext == 'pgm' || ext == 'pnm' || ext == 'ppm')
+            //{
+            //    //reader.onload = function ()
+            //    //{
+            //    //    reset_canvas();
+            //    //    //document.getElementById("text").innerHTML = 'Recognizing Text... This may take a while...'
+            //    //    o.font = '30px sans-serif'
+            //    //    o.fillText('No previews for NetPBM format.', 50, 100);
+            //    //    runOCR(new Uint8Array(reader.result), true);
+            //    //}
+            //    //reader.readAsArrayBuffer(file)
+            //}
+            //else
+            //{
+            reader.onload = function () {
+                var img = new Image();
+                img.src = reader.result;
+                img.onerror = function () {
+                    reset_canvas();
+                    o.font = '30px sans-serif'
+                    o.fillText('Error: Invalid Image ' + file.name, 50, 100);
+                }
+                img.onload = function () {
+
+                    reset_canvas();
+
+                    var rat = Math.min(c.width / img.width, c.height / img.height);
+                    o.drawImage(img, 0, 0, img.width * rat, img.height * rat)
+                    var tmp = document.createElement('canvas')
+                    tmp.width = img.width;
+                    tmp.height = img.height;
+                    var ctx = tmp.getContext('2d')
+                    ctx.drawImage(img, 0, 0);
+                    var image_data = ctx.getImageData(0, 0, tmp.width, tmp.height);
+
+                    ////-----------------------------------------------------------------------------------
+
+                    var bytesPerPixel = 4;
+                    var px_data = image_data.data;
+                    //alert(image_data.data.length);
+                    //document.getElementById("info").innerHTML = px_data;
+                    //Loop through every pixel - this could be slow for huge images.
+                    for (var y = 0; y < image_data.height; y++) {
+
+                        for (var x = 0; x < image_data.width; x++) {
+
+                            //Get the index of the first byte of the pixel.
+                            var startIdx = (y * bytesPerPixel * image_data.width) + (x * bytesPerPixel);
+                            //Get the RGB values.
+                            var red = px_data[startIdx];
+                            var green = px_data[startIdx + 1];
+                            var blue = px_data[startIdx + 2];
+
+                            var grayScale = (red + green + blue) / 3;
+
+                            if (grayScale > razina) {
+                                px_data[startIdx] = 255;
+                                px_data[startIdx + 1] = 255;
+                                px_data[startIdx + 2] = 255;
+                            }
+                            else {
+                                px_data[startIdx] = 0;
+                                px_data[startIdx + 1] = 0;
+                                px_data[startIdx + 2] = 0;
+                            }
+
+
+                        }
+                    }
+
+
+
+                    image_data.data = px_data;
+                    c.width = image_data.width;
+                    c.height = image_data.height;
+                    o.putImageData(image_data, 0, 0);
+
+                    //----------------------------------------------------------------------------------
+
+
+                    runOCR(image_data, true);
+                }
+
+            }
+            reader.readAsDataURL(file)
+        }
+
+        //}
+
+        var lastWorker;
+        var worker = new Worker('worker.js')
+        function runOCR(image_data, raw_feed) {
+
+            worker.onmessage = function (e) {
+
+                var x = e.data;
+                trazi_m_slika(x);
+
+            }
+            var start = Date.now()
+            if (!raw_feed) {
+                image_data = o.getImageData(0, 0, c.width, c.height);
+            }
+            worker.postMessage(image_data)
+            lastWorker = worker;
+        }
+
+        reset_canvas()
+
+
+        function trazi_m_slika(ID) {
+
+            ID_1 = ID;
+            ID_1 = ID_1.replace(/\s+/g, '');
+            ID_1 = ID_1.replace(/\\/g, '');
+            ID_1 = ID_1.replace(/|/g, '');
+            ID_1 = ID_1.replace(/_/g, '');
+
+            var p = ID_1.indexOf(".");
+            var k = ID_1.indexOf(".www" || "www");
+            ID_1 = ID_1.substring(k - 7, k);
+            //if (ID_1.length != 7) {
+            //    ID = ID.replace(/\s+/g, '');
+            //}
+            //else {
+            ID = ID_1;
+            //}
+
+            //if ((ID.substring(6, 7) == 0) || (ID.substring(6, 7) == 1) || (ID.substring(6, 7) == 2) || (ID.substring(6, 7) == 3) || (ID.substring(6, 7) == 4) || (ID.substring(6, 7) == 5) || (ID.substring(6, 7) == 6) || (ID.substring(6, 7) == 7) || (ID.substring(6, 7) == 8) || (ID.substring(6, 7) == 9))
+            //{
+            //alert(ID.substring(6, 7));
+            switch (ID.length) {
+                case 7:
+                    var trazi7;
+                    if (window.XMLHttpRequest) { trazi7 = new XMLHttpRequest(); } else { trazi7 = new ActiveXObject("Microsoft.XMLHTTP"); }
+                    trazi7.onreadystatechange = function () {
+                        if (trazi7.readyState == 4 && trazi7.responseText != "") {
+                            if (trazi7.responseText == 1) {
+                                window.location.replace("m.prikaz.html");
+                                //alert(trazi7.responseText);
+                            }
+                            else {
+                                again(ID);
+                                //document.getElementById('info').innerHTML = 'Uneseni harcode nije pronađen u bazi. [' + ID + ']';
+                            }
+                        }
+                    }
+                    trazi7.open("GET", "http://www.harcode.com/PhpScript/m.potvrda.php?code=" + ID, true);
+                    trazi7.send();
+                    break;
+                case 13:
+                    var trazi7;
+                    if (window.XMLHttpRequest) { trazi7 = new XMLHttpRequest(); } else { trazi7 = new ActiveXObject("Microsoft.XMLHTTP"); }
+                    trazi7.onreadystatechange = function () {
+                        if (trazi7.readyState == 4 && trazi7.responseText != "") {
+                            if (trazi7.responseText == 1) {
+                                window.location.replace("m.prikaz.html");
+                                //alert(trazi7.responseText);
+                            }
+                            else {
+                                again(ID);
+                                //document.getElementById('info').innerHTML = 'Uneseni barcode nije pronađen u bazi. [' + ID + ']';
+                            }
+                        }
+                    }
+                    trazi7.open("GET", "http://www.harcode.com/PhpScript/m.potvrda.php?code=" + ID, true);
+                    trazi7.send();
+                    break;
+                default:
+                    //document.getElementById('info').innerHTML = 'Trenutno na razini :[' + razina + '] Prepoznati kod sa slike je : [' + ID + '] pokušajte ponovno slikati i učitati sliku. Ili sačekajte da skripta odvrti sva moguća riješenja.';
+                    again(ID);
+                    break;
+                    //else {
+                    //    window.location.reload;
+                    //    document.getElementById('info').innerHTML = 'Kod nije pronađen na zadanoj slici pokušajte ponovno ili ukucajte kod ručno.';
+
+                    //}
+
+            }
+            //}
+            //else
+            //{
+            //    document.getElementById('info').innerHTML = 'Trenutno na razini :[' + razina + '] Prepoznati kod sa slike je : [' + ID + '] pokušajte ponovno slikati i učitati sliku. Ili sačekajte da skripta odvrti sva moguća riješenja.';
+
+            //    razina = razina + 1;
+            //    if (razina < 200) {
+            //        picked_file(subFile);
+            //    }
+            //    else
+            //    {
+            //        document.getElementById('info').innerHTML = 'Pokušajte ponovno, neuspješan pronalazak harcoda.';
+            //    }
+            //}
+        }
+        function again(ID) {
+            razina = razina + 2;
+            if (razina < 150) {
+                document.getElementById('info').innerHTML = 'Trenutno na razini :[' + razina + '][' + ID + ']';
+                picked_file(subFile);
+            }
+            else {
+                document.getElementById('info').innerHTML = "Skripta je završila.";
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
